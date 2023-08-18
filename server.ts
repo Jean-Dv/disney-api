@@ -1,9 +1,10 @@
 import helmet from 'helmet'
 import compress from 'compression'
-import express, { Application } from 'express'
+import express, { type Application } from 'express'
 
 import { ConfigEnv, logger } from '@configs/index'
 import { homeRouter } from '@apps/home/router'
+import sequelize from '@services/sequelize'
 
 export class Server {
   readonly app!: Application
@@ -13,7 +14,7 @@ export class Server {
 
   private static _instance: Server
 
-  constructor () {
+  constructor() {
     if (Server._instance instanceof Server) {
       return Server._instance
     }
@@ -22,14 +23,15 @@ export class Server {
     this.config()
     this.middlewares()
     this.routes()
+    this.initializeDatabase()
     Server._instance = this
   }
 
-  private config (): void {
+  private config(): void {
     this.port = ConfigEnv.PORT
   }
 
-  private middlewares (): void {
+  private middlewares(): void {
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(helmet.xssFilter())
@@ -40,11 +42,22 @@ export class Server {
     this.app.use(logger.express)
   }
 
-  private routes (): void {
+  private routes(): void {
     this.app.use(`${this.routePrefix}/ping`, homeRouter)
   }
 
-  start (): void {
+  private initializeDatabase(): void {
+    sequelize
+      .authenticate()
+      .then(() => {
+        logger.access.info('[*] Connection has been established successfully.')
+      })
+      .catch((err) => {
+        logger.debug.error('[*] Unable to connect to the database:', err)
+      })
+  }
+
+  start(): void {
     if (ConfigEnv.NODE_ENV !== 'test') {
       this.app.listen(this.port, () => {
         logger.access.info(`[*] Server is running on port ${this.port}...`)
