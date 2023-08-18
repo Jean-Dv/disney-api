@@ -5,6 +5,9 @@ export interface ENV {
   MYSQL_HOST: string | undefined
   MYSQL_USERNAME: string | undefined
   MYSQL_PASSWORD: string | undefined
+  SALT_ROUNDS: number | undefined
+  JWT_SECRET: string | undefined
+  JWT_EXPIRES_IN: string | undefined
 }
 
 export interface SanitizedEnv {
@@ -14,4 +17,7 @@ export interface SanitizedEnv {
   MYSQL_HOST: string
   MYSQL_USERNAME: string
   MYSQL_PASSWORD: string
+  SALT_ROUNDS: number
+  JWT_SECRET: string
+  JWT_EXPIRES_IN: string
 }

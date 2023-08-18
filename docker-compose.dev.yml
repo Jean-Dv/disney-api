@@ -1,4 +1,8 @@
 version: '3.9'
+
+networks:
+  api-network:
+
 services:
   app:
     container_name: TemplateExpressDocker
@@ -10,3 +14,31 @@ services:
       - '3000:3000'
     volumes:
       - .:/home/code
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - api-network
+
+  mysql:
+    image: mysql
+    restart: always
+    ports:
+      - 3306:3306
+      - 33060:33060
+    environment:
+      MYSQL_USER: '${MYSQL_USERNAME}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+    volumes:
+      - api_data:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 5
+    networks:
+      - api-network
+
+volumes:
+  api_data:

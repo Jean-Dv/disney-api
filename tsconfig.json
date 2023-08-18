@@ -32,6 +32,7 @@
       "@apps/*": ["apps/*"],
       "@configs/*": ["configs/*"],
       "@services/*": ["services/*"],
+      "@middlewares/*": ["middlewares/*"],
       "@root/*": ["./*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
@@ -103,6 +104,15 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["apps", "bin", "configs", "server.ts", "__test__", "services"],
+  "include": [
+    "apps",
+    "bin",
+    "configs",
+    "server.ts",
+    "__test__",
+    "services",
+    "middlewares",
+    "jest.config.js"
+  ],
   "exclude": ["node_modules"]
 }

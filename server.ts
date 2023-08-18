@@ -5,6 +5,7 @@ import express, { type Application } from 'express'
 import { ConfigEnv, logger } from '@configs/index'
 import { homeRouter } from '@apps/home/router'
 import sequelize from '@services/sequelize'
+import { authRouter } from '@apps/auth/router'
 
 export class Server {
   readonly app!: Application
@@ -23,7 +24,6 @@ export class Server {
     this.config()
     this.middlewares()
     this.routes()
-    this.initializeDatabase()
     Server._instance = this
   }
 
@@ -44,17 +44,12 @@ export class Server {
 
   private routes(): void {
     this.app.use(`${this.routePrefix}/ping`, homeRouter)
+    this.app.use(`${this.routePrefix}/auth`, authRouter)
   }
 
-  private initializeDatabase(): void {
-    sequelize
-      .authenticate()
-      .then(() => {
-        logger.access.info('[*] Connection has been established successfully.')
-      })
-      .catch((err) => {
-        logger.debug.error('[*] Unable to connect to the database:', err)
-      })
+  private async initializeDatabase(): Promise<void> {
+    await sequelize.authenticate()
+    await sequelize.sync()
   }
 
   start(): void {
@@ -62,6 +57,13 @@ export class Server {
       this.app.listen(this.port, () => {
         logger.access.info(`[*] Server is running on port ${this.port}...`)
       })
+      this.initializeDatabase()
+        .then(() => {
+          logger.access.info('[*] Database is connected')
+        })
+        .catch((err) => {
+          logger.debug.error('Error connecting to database: ', err)
+        })
     }
   }
 }
