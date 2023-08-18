@@ -21,7 +21,13 @@ const getConfig = (): ENV => {
         ? process.env.MYSQL_USERNAME
         : 'root',
     MYSQL_PASSWORD:
-      process.env.MYSQL_PASSWORD !== undefined ? process.env.MYSQL_PASSWORD : ''
+      process.env.MYSQL_PASSWORD !== undefined
+        ? process.env.MYSQL_PASSWORD
+        : '',
+    SALT_ROUNDS:
+      process.env.SALT_ROUNDS !== undefined
+        ? Number(process.env.SALT_ROUNDS)
+        : 10
   }
 }
 
