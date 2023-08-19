@@ -6,6 +6,7 @@ import { ConfigEnv, logger } from '@configs/index'
 import { homeRouter } from '@apps/home/router'
 import sequelize from '@services/sequelize'
 import { authRouter } from '@apps/auth/router'
+import { characterRouter } from '@apps/characters/router'
 
 export class Server {
   readonly app!: Application
@@ -45,6 +46,7 @@ export class Server {
   private routes(): void {
     this.app.use(`${this.routePrefix}/ping`, homeRouter)
     this.app.use(`${this.routePrefix}/auth`, authRouter)
+    this.app.use(`${this.routePrefix}/characters`, characterRouter)
   }
 
   private async initializeDatabase(): Promise<void> {

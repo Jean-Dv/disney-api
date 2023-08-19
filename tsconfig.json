@@ -112,7 +112,8 @@
     "__test__",
     "services",
     "middlewares",
-    "jest.config.js"
+    "jest.config.js",
+    "public"
   ],
   "exclude": ["node_modules"]
 }
