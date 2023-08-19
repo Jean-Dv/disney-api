@@ -4,51 +4,79 @@
   "description": "Api for moonshard WoW use database of Cataclysm 4.3.4",
   "main": "app.ts",
   "scripts": {
-    "dev": "NODE_ENV=development tsc-watch -p ./tsconfig.json --onSuccess \"node ./build/bin/www.js\"",
-    "lint": "ts-standard",
+    "dev": "NODE_ENV=development ts-node-dev --project tsconfig.json -r tsconfig-paths/register --ignore-watch node_modules ./bin/www.ts",
+    "lint": "eslint ./**/*.ts",
+    "lint:fix": "eslint ./**/*.ts --fix",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "start": "NODE_ENV=production node build/bin/www.js",
     "test": "NODE_ENV=test npx jest --verbose",
     "test:watch": "NODE_ENV=test npm run test -- --watchAll",
-    "build": "npm run build:clean && npm run build:tsc",
+    "build": "npm run build:clean && npm run build:tsc && npm run build:di",
     "build:tsc": "npx tsc -p tsconfig.prod.json",
-    "build:clean": "rm -rf build; exit 0"
+    "build:clean": "rm -rf build; exit 0",
+    "build:di": "copy '**/*.{json,yaml,html,png}' build/",
+    "prepare": "husky install"
   },
   "author": "JeanDev <mrjunior127@gmail.com> (https://github.com/Jean-Dv)",
   "license": "MIT",
   "dependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "bcrypt": "5.1.1",
     "compression": "1.7.4",
+    "copy": "0.3.2",
     "dotenv": "16.0.1",
     "express": "4.18.1",
+    "express-validator": "7.0.1",
     "helmet": "6.0.0",
+    "http-status": "1.6.2",
+    "jsonwebtoken": "9.0.1",
     "log4js": "6.6.0",
-    "module-alias": "2.2.2"
+    "mariadb": "3.2.0",
+    "multer": "1.4.5-lts.1",
+    "mysql2": "3.6.0",
+    "sequelize": "6.32.1",
+    "sharp": "0.32.5",
+    "uuid": "9.0.0",
+    "uuid-validate": "0.0.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "5.0.0",
     "@types/compression": "1.7.2",
     "@types/express": "4.17.13",
-    "@types/helmet": "4.0.0",
     "@types/jest": "28.1.6",
+    "@types/jsonwebtoken": "9.0.2",
     "@types/module-alias": "2.0.1",
+    "@types/multer": "1.4.7",
     "@types/node": "18.0.6",
+    "@types/sharp": "0.32.0",
     "@types/supertest": "2.0.12",
+    "@types/uuid": "9.0.2",
+    "@types/uuid-validate": "0.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "9.0.0",
+    "eslint-config-standard-with-typescript": "37.0.0",
+    "eslint-plugin-import": "2.28.0",
+    "eslint-plugin-n": "16.0.1",
+    "eslint-plugin-prettier": "5.0.0",
+    "eslint-plugin-promise": "6.1.1",
+    "husky": "^8.0.0",
     "jest": "28.1.3",
+    "lint-staged": "14.0.0",
+    "module-alias": "2.2.3",
+    "prettier": "3.0.2",
     "supertest": "6.2.4",
     "ts-jest": "28.0.7",
-    "ts-standard": "11.0.0",
-    "tsc-watch": "5.0.3",
-    "typescript": "4.7.4"
+    "ts-node-dev": "2.0.0",
+    "tsconfig-paths": "4.2.0",
+    "typescript": "^4.7.4"
   },
-  "_moduleAliases": {
-    "@apps": "build/apps",
-    "@configs": "build/configs",
-    "@root": "build"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "project": "./tsconfig.json"
-    },
-    "extends": [
-      "./node_modules/ts-standard/eslintrc.json"
+  "lint-staged": {
+    "*.(ts)": [
+      "npm run lint:fix",
+      "npm run prettier:fix"
     ]
   }
 }
